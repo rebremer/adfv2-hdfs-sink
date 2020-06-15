@@ -1,0 +1,32 @@
+{
+	"name": "run copy distcp",
+	"properties": {
+		"activities": [
+			{
+				"name": "distcp",
+				"type": "HDInsightHive",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"scriptPath": "scripts/distcp.hql",
+					"scriptLinkedService": {
+						"referenceName": "testhdistor_copyscript",
+						"type": "LinkedServiceReference"
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "testhdihdi_ondemand",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"annotations": []
+	}
+}
