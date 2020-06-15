@@ -1,1 +1,1 @@
-## Project to copy data with ADFv2 HDInsight On demand cluster
+## Copy data with ADFv2 HDInsight on demand cluster
