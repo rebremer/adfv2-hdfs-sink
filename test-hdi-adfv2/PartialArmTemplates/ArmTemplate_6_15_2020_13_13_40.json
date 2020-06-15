@@ -1,0 +1,69 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "test-hdi-adfv2"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/testhdihdi_ondemand')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "HDInsightOnDemand",
+				"typeProperties": {
+					"clusterType": "hadoop",
+					"clusterSize": 1,
+					"timeToLive": "00:15:00",
+					"version": "3.6",
+					"hostSubscriptionId": "513a7987-b0d9-4106-a24d-4b3f49136ea8",
+					"clusterResourceGroup": "test-adfv2-rg",
+					"servicePrincipalId": "caf619a5-8aee-49ce-a8c2-effc81591750",
+					"tenant": "72f988bf-86f1-41af-91ab-2d7cd011db47",
+					"clusterNamePrefix": "",
+					"clusterPassword": {
+						"type": "SecureString",
+						"value": "**********"
+					},
+					"clusterSshPassword": {
+						"type": "SecureString",
+						"value": "**********"
+					},
+					"scriptActions": [
+						{
+							"name": "link source sink storage",
+							"uri": "https://raw.githubusercontent.com/rebremer/adfv2-hdfs-sink/master/HDInsight_actionscripts/link_source_sink_storage.sh",
+							"parameters": "<<source storage name>> <<source storage key>> <<source storage container>> <<sink storage name>> <<sink storage key>> <<sink storage container>>",
+							"roles": [
+								"headnode"
+							]
+						}
+					],
+					"servicePrincipalKey": {
+						"type": "SecureString",
+						"value": "**********"
+					},
+					"additionalLinkedServiceNames": [],
+					"linkedServiceName": {
+						"referenceName": "testhdistor_copyscript",
+						"type": "LinkedServiceReference"
+					},
+					"headNodeSize": "",
+					"dataNodeSize": "",
+					"zookeeperNodeSize": "",
+					"subnetName": "",
+					"virtualNetworkId": ""
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
