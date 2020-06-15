@@ -1,0 +1,98 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "test-hdi-adfv2"
+		},
+		"testhdistor_copyscript_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'testhdistor_copyscript'"
+		},
+		"testhdihdi_ondemand_clusterPassword": {
+			"type": "secureString",
+			"metadata": "Secure string for 'clusterPassword' of 'testhdihdi_ondemand'"
+		},
+		"testhdihdi_ondemand_clusterSshPassword": {
+			"type": "secureString",
+			"metadata": "Secure string for 'clusterSshPassword' of 'testhdihdi_ondemand'"
+		},
+		"testhdihdi_ondemand_servicePrincipalKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'servicePrincipalKey' of 'testhdihdi_ondemand'"
+		},
+		"testhdihdi_ondemand_properties_typeProperties_hostSubscriptionId": {
+			"type": "string",
+			"defaultValue": "513a7987-b0d9-4106-a24d-4b3f49136ea8"
+		},
+		"testhdihdi_ondemand_properties_typeProperties_clusterResourceGroup": {
+			"type": "string",
+			"defaultValue": "test-adfv2-rg"
+		},
+		"testhdihdi_ondemand_properties_typeProperties_servicePrincipalId": {
+			"type": "string",
+			"defaultValue": "caf619a5-8aee-49ce-a8c2-effc81591750"
+		},
+		"testhdihdi_ondemand_properties_typeProperties_tenant": {
+			"type": "string",
+			"defaultValue": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"testhdistor_copyscript_connectionString": {
+						"value": "[parameters('testhdistor_copyscript_connectionString')]"
+					},
+					"testhdihdi_ondemand_clusterPassword": {
+						"value": "[parameters('testhdihdi_ondemand_clusterPassword')]"
+					},
+					"testhdihdi_ondemand_clusterSshPassword": {
+						"value": "[parameters('testhdihdi_ondemand_clusterSshPassword')]"
+					},
+					"testhdihdi_ondemand_servicePrincipalKey": {
+						"value": "[parameters('testhdihdi_ondemand_servicePrincipalKey')]"
+					},
+					"testhdihdi_ondemand_properties_typeProperties_hostSubscriptionId": {
+						"value": "[parameters('testhdihdi_ondemand_properties_typeProperties_hostSubscriptionId')]"
+					},
+					"testhdihdi_ondemand_properties_typeProperties_clusterResourceGroup": {
+						"value": "[parameters('testhdihdi_ondemand_properties_typeProperties_clusterResourceGroup')]"
+					},
+					"testhdihdi_ondemand_properties_typeProperties_servicePrincipalId": {
+						"value": "[parameters('testhdihdi_ondemand_properties_typeProperties_servicePrincipalId')]"
+					},
+					"testhdihdi_ondemand_properties_typeProperties_tenant": {
+						"value": "[parameters('testhdihdi_ondemand_properties_typeProperties_tenant')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

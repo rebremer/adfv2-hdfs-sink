@@ -1,0 +1,153 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "test-hdi-adfv2"
+		},
+		"testhdistor_copyscript_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'testhdistor_copyscript'"
+		},
+		"testhdihdi_ondemand_clusterPassword": {
+			"type": "secureString",
+			"metadata": "Secure string for 'clusterPassword' of 'testhdihdi_ondemand'"
+		},
+		"testhdihdi_ondemand_clusterSshPassword": {
+			"type": "secureString",
+			"metadata": "Secure string for 'clusterSshPassword' of 'testhdihdi_ondemand'"
+		},
+		"testhdihdi_ondemand_servicePrincipalKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'servicePrincipalKey' of 'testhdihdi_ondemand'"
+		},
+		"testhdihdi_ondemand_properties_typeProperties_hostSubscriptionId": {
+			"type": "string",
+			"defaultValue": "513a7987-b0d9-4106-a24d-4b3f49136ea8"
+		},
+		"testhdihdi_ondemand_properties_typeProperties_clusterResourceGroup": {
+			"type": "string",
+			"defaultValue": "test-adfv2-rg"
+		},
+		"testhdihdi_ondemand_properties_typeProperties_servicePrincipalId": {
+			"type": "string",
+			"defaultValue": "caf619a5-8aee-49ce-a8c2-effc81591750"
+		},
+		"testhdihdi_ondemand_properties_typeProperties_tenant": {
+			"type": "string",
+			"defaultValue": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/testhdistor_copyscript')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('testhdistor_copyscript_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/testhdihdi_ondemand')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "HDInsightOnDemand",
+				"typeProperties": {
+					"clusterType": "hadoop",
+					"clusterSize": 1,
+					"timeToLive": "00:15:00",
+					"version": "3.6",
+					"hostSubscriptionId": "[parameters('testhdihdi_ondemand_properties_typeProperties_hostSubscriptionId')]",
+					"clusterResourceGroup": "[parameters('testhdihdi_ondemand_properties_typeProperties_clusterResourceGroup')]",
+					"servicePrincipalId": "[parameters('testhdihdi_ondemand_properties_typeProperties_servicePrincipalId')]",
+					"tenant": "[parameters('testhdihdi_ondemand_properties_typeProperties_tenant')]",
+					"clusterNamePrefix": "",
+					"clusterPassword": {
+						"type": "SecureString",
+						"value": "[parameters('testhdihdi_ondemand_clusterPassword')]"
+					},
+					"clusterSshPassword": {
+						"type": "SecureString",
+						"value": "[parameters('testhdihdi_ondemand_clusterSshPassword')]"
+					},
+					"scriptActions": [
+						{
+							"name": "link source sink storage",
+							"uri": "https://raw.githubusercontent.com/rebremer/adfv2-hdfs-sink/master/HDInsight_actionscripts/link_source_sink_storage.sh",
+							"parameters": "<<source storage name>> <<source storage key>> <<source storage container>> <<sink storage name>> <<sink storage key>> <<sink storage container>>",
+							"roles": [
+								"headnode"
+							]
+						}
+					],
+					"servicePrincipalKey": {
+						"type": "SecureString",
+						"value": "[parameters('testhdihdi_ondemand_servicePrincipalKey')]"
+					},
+					"linkedServiceName": {
+						"referenceName": "testhdistor_copyscript",
+						"type": "LinkedServiceReference"
+					},
+					"headNodeSize": "",
+					"dataNodeSize": "",
+					"zookeeperNodeSize": "",
+					"subnetName": "",
+					"virtualNetworkId": ""
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/testhdistor_copyscript')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/run copy distcp')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "distcp",
+						"type": "HDInsightHive",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"scriptPath": "scripts/distcp.hql",
+							"scriptLinkedService": {
+								"referenceName": "testhdistor_copyscript",
+								"type": "LinkedServiceReference"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "testhdihdi_ondemand",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/testhdihdi_ondemand')]",
+				"[concat(variables('factoryId'), '/linkedServices/testhdistor_copyscript')]"
+			]
+		}
+	]
+}

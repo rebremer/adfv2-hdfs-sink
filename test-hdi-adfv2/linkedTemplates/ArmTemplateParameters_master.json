@@ -1,0 +1,39 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "test-hdi-adfv2"
+		},
+		"testhdistor_copyscript_connectionString": {
+			"value": ""
+		},
+		"testhdihdi_ondemand_clusterPassword": {
+			"value": ""
+		},
+		"testhdihdi_ondemand_clusterSshPassword": {
+			"value": ""
+		},
+		"testhdihdi_ondemand_servicePrincipalKey": {
+			"value": ""
+		},
+		"testhdihdi_ondemand_properties_typeProperties_hostSubscriptionId": {
+			"value": "513a7987-b0d9-4106-a24d-4b3f49136ea8"
+		},
+		"testhdihdi_ondemand_properties_typeProperties_clusterResourceGroup": {
+			"value": "test-adfv2-rg"
+		},
+		"testhdihdi_ondemand_properties_typeProperties_servicePrincipalId": {
+			"value": "caf619a5-8aee-49ce-a8c2-effc81591750"
+		},
+		"testhdihdi_ondemand_properties_typeProperties_tenant": {
+			"value": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
