@@ -1,4 +1,4 @@
-## Copy data with ADFv2 with distcp using On-demand HDInsight
+## Copy data with On-demand HDInsight in ADFv2 using distcp
 
 Project that creates an ADFv2 On-demand HDInsight cluster to copy data using distcp. In this example, a source and sink blob storage account are used, however, an on-premises HDFS sink can be used as well (notice that HDFS sink is not supported in ADFv2 directly, see [here](https://docs.microsoft.com/en-us/azure/data-factory/copy-activity-overview#supported-data-stores-and-formats)). Following steps need to be executed:
 
