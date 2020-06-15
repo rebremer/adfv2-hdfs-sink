@@ -1,0 +1,1 @@
+! hadoop distcp wasbs://<<source storage container>>@<<source storage name>>.blob.core.windows.net/ wasbs://<<sink storage container>>@<<sink storage name>>.blob.core.windows.net/
